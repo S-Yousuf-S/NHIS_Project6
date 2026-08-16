@@ -38,6 +38,7 @@ SalesFC_ENV/
 # Raw data (large files — download link provided in README instead)
 Assets/*.csv
 !Assets/sample_submission.csv
+!Assets/train.csv
 
 # Processed/merged datasets (exported from Notebook 1)
 Assets/*_processed.csv
