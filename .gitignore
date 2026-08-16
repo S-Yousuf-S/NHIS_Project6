@@ -43,7 +43,7 @@ Assets/*.csv
 Assets/*_processed.csv
 
 # Model artifacts (serialized, regeneratable from notebooks)
-models/*.pkl
+Models/*.pkl
 
 # MLflow (pending Wednesday confirmation)
 mlruns/
