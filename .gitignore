@@ -36,7 +36,7 @@ SalesFC_ENV/
 # ===== Project-specific =====
 
 # Raw data (large files — download link provided in README instead)
-Assets/*.csv
+#Assets/*.csv
 !Assets/sample_submission.csv
 !Assets/train.csv
 
