@@ -42,6 +42,8 @@ Assets/*.csv
 
 # Processed/merged datasets (exported from Notebook 1)
 Assets/*_processed.csv
+Assets/store_train_data.csv
+Assets/store_test_data.csv
 
 # Model artifacts (serialized, regeneratable from notebooks)
 Models/*.pkl
