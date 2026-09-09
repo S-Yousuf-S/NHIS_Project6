@@ -10,7 +10,7 @@
                 01_salesfc_preprocessing.ipynb
                 02_salesfc_ml_modeling.ipynb
                 03_salesfc_deep_learning.ipynb
-                04_salesfc_mlflow_tracking.ipynb
+                04_salesfc_time_series.ipynb
 
  Scope        : Only contains logic that is genuinely reusable across ANY project/dataset - 
                 no dataset-specific decisions (e.g. which strategy to use on which column, which features to engineer).
