@@ -204,23 +204,51 @@ with tab1:
                                    format_func=lambda k: STORE_TYPE_LABELS[k],
                                    index=list(STORE_TYPE_LABELS.keys()).index(store_row["StoreType"]))
         
-        if "comp_dist" not in st.session_state:
-            st.session_state.comp_dist = int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000
+        def sync_slider_to_num():
+                st.session_state.comp_dist_num = st.session_state.comp_dist_slider
+        def sync_num_to_slider():
+            st.session_state.comp_dist_slider = st.session_state.comp_dist_num
+
+        if "comp_dist_slider" not in st.session_state:
+            default_val = int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000
+            st.session_state.comp_dist_slider = default_val
+            st.session_state.comp_dist_num = default_val
 
         col_s, col_n = st.columns([3, 1])
         with col_s:
-            st.slider("Competition Distance (m)", 0, 20000, key="comp_dist")
+            st.slider("Competition Distance (m)", 0, 20000, key="comp_dist_slider", on_change=sync_slider_to_num)
         with col_n:
-            st.number_input(" ", 0, 20000, key="comp_dist", label_visibility="collapsed")
-        competition_distance = st.session_state.comp_dist
+            st.number_input(" ", 0, 20000, key="comp_dist_num", on_change=sync_num_to_slider, label_visibility="collapsed")
+        competition_distance = st.session_state.comp_dist_slider
 
         with st.expander("Other date-dependent fields"):
             state_holiday = st.selectbox("State Holiday", options=list(STATE_HOLIDAY_LABELS.keys()),
                                           format_func=lambda k: STATE_HOLIDAY_LABELS[k])
             school_holiday = st.selectbox("School Holiday", options=[0, 1],
                                            format_func=lambda k: SCHOOL_HOLIDAY_LABELS[k])
-            days_to_holiday = st.number_input("Days to next holiday", min_value=0, max_value=60, value=14, step=1)
-            days_since_holiday = st.number_input("Days since last holiday", min_value=0, max_value=60, value=14, step=1)
+            def sync_dth_slider(): st.session_state.dth_num = st.session_state.dth_slider
+            def sync_dth_num(): st.session_state.dth_slider = st.session_state.dth_num
+            if "dth_slider" not in st.session_state:
+                st.session_state.dth_slider = 14
+                st.session_state.dth_num = 14
+            col_s, col_n = st.columns([3, 1])
+            with col_s:
+                st.slider("Days to next holiday", 0, 60, key="dth_slider", on_change=sync_dth_slider)
+            with col_n:
+                st.number_input(" ", 0, 60, key="dth_num", on_change=sync_dth_num, label_visibility="collapsed")
+            days_to_holiday = st.session_state.dth_slider
+
+            def sync_dsh_slider(): st.session_state.dsh_num = st.session_state.dsh_slider
+            def sync_dsh_num(): st.session_state.dsh_slider = st.session_state.dsh_num
+            if "dsh_slider" not in st.session_state:
+                st.session_state.dsh_slider = 14
+                st.session_state.dsh_num = 14
+            col_s2, col_n2 = st.columns([3, 1])
+            with col_s2:
+                st.slider("Days since last holiday", 0, 60, key="dsh_slider", on_change=sync_dsh_slider)
+            with col_n2:
+                st.number_input(" ", 0, 60, key="dsh_num", on_change=sync_dsh_num, label_visibility="collapsed")
+            days_since_holiday = st.session_state.dsh_slider
 
         predict_clicked = st.button("Generate Forecast", type="primary")
 
