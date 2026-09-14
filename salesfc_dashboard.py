@@ -30,7 +30,8 @@ PRIMARY_COLOR = "indigo"
 SECONDARY_COLOR = "thistle"
 SUCCESS_COLOR = "#2E8B57"
 TITLE_COLOR = "midnightblue"
-
+SALES_AXIS_MAX = 40000
+CUSTOMERS_AXIS_MAX = 5000
 ASSORTMENT_LABELS = {"a": "Basic", "b": "Extra", "c": "Extended"}
 STATE_HOLIDAY_LABELS = {"0": "None", "a": "Public Holiday", "b": "Easter Holiday", "c": "Christmas"}
 SCHOOL_HOLIDAY_LABELS = {0: "No", 1: "Yes"}
@@ -202,9 +203,16 @@ with tab1:
         store_type = st.selectbox("Store Type", options=list(STORE_TYPE_LABELS.keys()),
                                    format_func=lambda k: STORE_TYPE_LABELS[k],
                                    index=list(STORE_TYPE_LABELS.keys()).index(store_row["StoreType"]))
-        competition_distance = st.number_input("Competition Distance (m)", min_value=0, max_value=20000,
-                                                 value=int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000,
-                                                 step=100)
+        
+        if "comp_dist" not in st.session_state:
+            st.session_state.comp_dist = int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000
+
+        col_s, col_n = st.columns([3, 1])
+        with col_s:
+            st.slider("Competition Distance (m)", 0, 20000, key="comp_dist")
+        with col_n:
+            st.number_input(" ", 0, 20000, key="comp_dist", label_visibility="collapsed")
+        competition_distance = st.session_state.comp_dist
 
         with st.expander("Other date-dependent fields"):
             state_holiday = st.selectbox("State Holiday", options=list(STATE_HOLIDAY_LABELS.keys()),
@@ -238,8 +246,8 @@ with tab1:
             ax1.set_xticklabels(["Sales (€)", "Customers"], fontsize=11)
             ax1.set_ylabel("Predicted Sales (€)", color="forestgreen", fontsize=11)
             ax2.set_ylabel("Predicted Customers", color="cornflowerblue", fontsize=11)
-            ax1.set_ylim(0, pred_sales * 1.3)
-            ax2.set_ylim(0, pred_customers * 1.3)
+            ax1.set_ylim(0, SALES_AXIS_MAX)
+            ax2.set_ylim(0, CUSTOMERS_AXIS_MAX)
             ax1.tick_params(axis="y", labelcolor="forestgreen", labelsize=9)
             ax2.tick_params(axis="y", labelcolor="cornflowerblue", labelsize=9)
             ax1.tick_params(axis="x", labelsize=10)
