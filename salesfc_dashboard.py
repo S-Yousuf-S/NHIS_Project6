@@ -202,16 +202,17 @@ with tab1:
         store_type = st.selectbox("Store Type", options=list(STORE_TYPE_LABELS.keys()),
                                    format_func=lambda k: STORE_TYPE_LABELS[k],
                                    index=list(STORE_TYPE_LABELS.keys()).index(store_row["StoreType"]))
-        competition_distance = st.slider("Competition Distance (m)", 0, 20000,
-                                          int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000)
+        competition_distance = st.number_input("Competition Distance (m)", min_value=0, max_value=20000,
+                                                 value=int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000,
+                                                 step=100)
 
         with st.expander("Other date-dependent fields"):
             state_holiday = st.selectbox("State Holiday", options=list(STATE_HOLIDAY_LABELS.keys()),
                                           format_func=lambda k: STATE_HOLIDAY_LABELS[k])
             school_holiday = st.selectbox("School Holiday", options=[0, 1],
                                            format_func=lambda k: SCHOOL_HOLIDAY_LABELS[k])
-            days_to_holiday = st.slider("Days to next holiday", 0, 60, 14)
-            days_since_holiday = st.slider("Days since last holiday", 0, 60, 14)
+            days_to_holiday = st.number_input("Days to next holiday", min_value=0, max_value=60, value=14, step=1)
+            days_since_holiday = st.number_input("Days since last holiday", min_value=0, max_value=60, value=14, step=1)
 
         predict_clicked = st.button("Generate Forecast", type="primary")
 
@@ -345,6 +346,12 @@ with tab2:
         ax1.set_title("Sales & Customer Forecast Over Time", color=TITLE_COLOR, fontweight="bold")
         plt.tight_layout()
         st.pyplot(fig)
-
-        st.dataframe(results)
-        st.download_button("Download predictions as CSV", results.to_csv(index=False), "predictions.csv")
+        if view_mode == "Aggregate":
+            plot_data = results.groupby("Date")[["Predicted_Sales", "Predicted_Customers"]].sum()
+            display_results = results
+        else:
+            chosen_store = st.selectbox("Store", results["Store"].unique())
+            plot_data = results[results["Store"] == chosen_store].set_index("Date")[["Predicted_Sales", "Predicted_Customers"]]
+            display_results = results[results["Store"] == chosen_store]
+        st.dataframe(display_results)
+        st.download_button("Download predictions as CSV", display_results.to_csv(index=False), "predictions.csv")
