@@ -291,8 +291,12 @@ with tab1:
             ax1.set_xticklabels(["Sales (€)", "Customers"], fontsize=11)
             ax1.set_ylabel("Predicted Sales (€)", color="forestgreen", fontsize=11)
             ax2.set_ylabel("Predicted Customers", color="cornflowerblue", fontsize=11)
-            ax1.set_ylim(0, st.session_state.sales_axis_max)
-            ax2.set_ylim(0, st.session_state.cust_axis_max)
+            
+            safe_sales_max = max(st.session_state.sales_axis_max, pred_sales * 1.25)
+            safe_cust_max = max(st.session_state.cust_axis_max, pred_customers * 1.25)
+            
+            ax1.set_ylim(0, safe_sales_max)
+            ax2.set_ylim(0, safe_cust_max)
             ax1.tick_params(axis="y", labelcolor="forestgreen", labelsize=9)
             ax2.tick_params(axis="y", labelcolor="cornflowerblue", labelsize=9)
             ax1.tick_params(axis="x", labelsize=10)
