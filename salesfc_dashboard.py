@@ -308,19 +308,20 @@ with tab2:
         results = upload_df[["Store", "Date"]].copy()
         results["Predicted_Sales"] = sales_pipeline.predict(X_bulk)
         results["Predicted_Customers"] = customers_pipeline.predict(X_bulk)
-
+        
         if view_mode == "Aggregate":
             plot_data = results.groupby("Date")[["Predicted_Sales", "Predicted_Customers"]].sum()
+            display_results = results
         else:
             chosen_store = st.selectbox("Store", results["Store"].unique())
             plot_data = results[results["Store"] == chosen_store].set_index("Date")[["Predicted_Sales", "Predicted_Customers"]]
+            display_results = results[results["Store"] == chosen_store]
 
         k1, k2, k3, k4 = st.columns(4)
         with k1: k1.metric("Total Predicted Sales", f"€{results['Predicted_Sales'].sum():,.0f}")
         with k2: k2.metric("Total Predicted Customers", f"{results['Predicted_Customers'].sum():,.0f}")
         with k3: k3.metric("Stores Covered", f"{results['Store'].nunique()}")
         with k4: k4.metric("Date Range", f"{results['Date'].min().date()} → {results['Date'].max().date()}")
-        
 
         fig, ax1 = plt.subplots(figsize=(12, 5))
         ax1.plot(plot_data.index, plot_data["Predicted_Sales"], color="forestgreen",
@@ -346,12 +347,6 @@ with tab2:
         ax1.set_title("Sales & Customer Forecast Over Time", color=TITLE_COLOR, fontweight="bold")
         plt.tight_layout()
         st.pyplot(fig)
-        if view_mode == "Aggregate":
-            plot_data = results.groupby("Date")[["Predicted_Sales", "Predicted_Customers"]].sum()
-            display_results = results
-        else:
-            chosen_store = st.selectbox("Store", results["Store"].unique())
-            plot_data = results[results["Store"] == chosen_store].set_index("Date")[["Predicted_Sales", "Predicted_Customers"]]
-            display_results = results[results["Store"] == chosen_store]
+
         st.dataframe(display_results)
         st.download_button("Download predictions as CSV", display_results.to_csv(index=False), "predictions.csv")
