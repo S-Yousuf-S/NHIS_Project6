@@ -30,8 +30,8 @@ PRIMARY_COLOR = "indigo"
 SECONDARY_COLOR = "thistle"
 SUCCESS_COLOR = "#2E8B57"
 TITLE_COLOR = "midnightblue"
-SALES_AXIS_MAX = 40000
-CUSTOMERS_AXIS_MAX = 5000
+#SALES_AXIS_MAX = 40000
+#CUSTOMERS_AXIS_MAX = 5000
 ASSORTMENT_LABELS = {"a": "Basic", "b": "Extra", "c": "Extended"}
 STATE_HOLIDAY_LABELS = {"0": "None", "a": "Public Holiday", "b": "Easter Holiday", "c": "Christmas"}
 SCHOOL_HOLIDAY_LABELS = {0: "No", 1: "Yes"}
@@ -194,6 +194,23 @@ with tab1:
 
         forecast_date = st.date_input("Forecast date", value=date.today())
 
+        if "current_store" not in st.session_state or st.session_state.current_store != store_id:
+            default_dist = int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000
+            
+            # Generate a neutral baseline prediction (Promo=0, no holidays) for this store
+            baseline_X = build_feature_row(
+                store_row, forecast_date, promo=0, state_holiday="0", school_holiday=0,
+                assortment=store_row["Assortment"], store_type=store_row["StoreType"], 
+                competition_distance=default_dist, days_to_holiday=14, days_since_holiday=14
+            )
+            base_sales = sales_pipeline.predict(baseline_X)[0]
+            base_cust = customers_pipeline.predict(baseline_X)[0]
+            
+            # Lock the axes to 2x the neutral baseline (leaving room for Promo spikes)
+            st.session_state.sales_axis_max = base_sales * 2.0
+            st.session_state.cust_axis_max = base_cust * 2.0
+            st.session_state.current_store = store_id
+
         st.markdown("**Top drivers** — pre-filled from this store, adjustable for what-if scenarios")
         promo = st.selectbox("Promo running today?", ["No", "Yes"])
         promo = 1 if promo == "Yes" else 0
@@ -274,8 +291,8 @@ with tab1:
             ax1.set_xticklabels(["Sales (€)", "Customers"], fontsize=11)
             ax1.set_ylabel("Predicted Sales (€)", color="forestgreen", fontsize=11)
             ax2.set_ylabel("Predicted Customers", color="cornflowerblue", fontsize=11)
-            ax1.set_ylim(0, SALES_AXIS_MAX)
-            ax2.set_ylim(0, CUSTOMERS_AXIS_MAX)
+            ax1.set_ylim(0, st.session_state.sales_axis_max)
+            ax2.set_ylim(0, st.session_state.cust_axis_max)
             ax1.tick_params(axis="y", labelcolor="forestgreen", labelsize=9)
             ax2.tick_params(axis="y", labelcolor="cornflowerblue", labelsize=9)
             ax1.tick_params(axis="x", labelsize=10)
