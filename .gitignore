@@ -52,3 +52,4 @@ deploy_assets/*.pkl
 
 # MLflow (pending Wednesday confirmation)
 mlruns/
+/Assets
