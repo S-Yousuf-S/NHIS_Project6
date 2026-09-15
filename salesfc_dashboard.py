@@ -19,6 +19,8 @@ import joblib
 import glob
 import os
 import gdown
+import gc
+import threading
 from datetime import date
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -54,26 +56,70 @@ h1 { font-size: 2.3rem !important; }
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# Loading — latest serialized artifacts + raw store attributes
+# Model loading / prediction
 # ------------------------------------------------------------------------------
 
 SALES_MODEL_DRIVE_ID = "1nRubYM7hRuwU25EGlVpuQT2Varnbgzwr"
 CUSTOMERS_MODEL_DRIVE_ID = "1jB3IeUd9_kMYThx-I9Utne81-OoDJcH3"
 
-@st.cache_resource
-def load_model_from_drive(drive_id, local_filename):
+# Prevent multiple users from loading huge models simultaneously.
+# Only one model should occupy memory at a time.
+MODEL_LOCK = threading.Lock()
+
+
+def get_model_path(drive_id, local_filename):
+    """
+    Download the model to local storage if it does not already exist.
+    Returns the local model path.
+    """
     local_path = os.path.join("deploy_assets", local_filename)
+
     if not os.path.exists(local_path):
         os.makedirs("deploy_assets", exist_ok=True)
-        gdown.download(f"https://drive.google.com/uc?id={drive_id}", local_path, quiet=False)
-    return joblib.load(local_path)
+
+        gdown.download(
+            f"https://drive.google.com/uc?id={drive_id}",
+            local_path,
+            quiet=False
+        )
+
+    return local_path
+
+
+def predict_with_model(drive_id, local_filename, X):
+    """
+    Load ONE model, make predictions, then immediately release the model
+    from memory before returning the predictions.
+
+    This prevents the sales and customer Random Forest models from
+    occupying RAM at the same time.
+    """
+
+    with MODEL_LOCK:
+
+        model_path = get_model_path(drive_id, local_filename)
+
+        # Load only this model
+        model = joblib.load(model_path)
+
+        try:
+            predictions = model.predict(X)
+        finally:
+            # Explicitly release the large model
+            del model
+            gc.collect()
+
+        return predictions
+
 
 @st.cache_data
 def load_store_reference():
     return pd.read_csv("deploy_assets/store.csv")
 
-sales_pipeline = load_model_from_drive(SALES_MODEL_DRIVE_ID, "final_tuned_rf_pipeline.pkl")
-customers_pipeline = load_model_from_drive(CUSTOMERS_MODEL_DRIVE_ID, "final_tuned_rf_customers_pipeline.pkl")
+
+# IMPORTANT:
+# Do NOT load either ML model here.
+# Models are loaded only during an actual prediction.
 store_ref = load_store_reference()
 
 # ------------------------------------------------------------------------------
@@ -195,21 +241,13 @@ with tab1:
         forecast_date = st.date_input("Forecast date", value=date.today())
 
         if "current_store" not in st.session_state or st.session_state.current_store != store_id:
-            default_dist = int(store_row["CompetitionDistance"]) if pd.notna(store_row["CompetitionDistance"]) else 5000
-            
-            # Generate a neutral baseline prediction (Promo=0, no holidays) for this store
-            baseline_X = build_feature_row(
-                store_row, forecast_date, promo=0, state_holiday="0", school_holiday=0,
-                assortment=store_row["Assortment"], store_type=store_row["StoreType"], 
-                competition_distance=default_dist, days_to_holiday=14, days_since_holiday=14
-            )
-            base_sales = sales_pipeline.predict(baseline_X)[0]
-            base_cust = customers_pipeline.predict(baseline_X)[0]
-            
-            # Lock the axes to 2x the neutral baseline (leaving room for Promo spikes)
-            st.session_state.sales_axis_max = base_sales * 2.0
-            st.session_state.cust_axis_max = base_cust * 2.0
             st.session_state.current_store = store_id
+
+            # Initial chart limits.
+            # These are only visual defaults; actual prediction values
+            # are calculated when Generate Forecast is clicked.
+            st.session_state.sales_axis_max = 40000
+            st.session_state.cust_axis_max = 5000
 
         st.markdown("**Top drivers** — pre-filled from this store, adjustable for what-if scenarios")
         promo = st.selectbox("Promo running today?", ["No", "Yes"])
@@ -271,39 +309,145 @@ with tab1:
 
     with col_result:
         if predict_clicked:
-            X_row = build_feature_row(store_row, forecast_date, promo, state_holiday, school_holiday,
-                                       assortment, store_type, competition_distance,
-                                       days_to_holiday, days_since_holiday)
-            pred_sales = sales_pipeline.predict(X_row)[0]
-            pred_customers = customers_pipeline.predict(X_row)[0]
+
+            X_row = build_feature_row(
+            store_row,
+            forecast_date,
+            promo,
+            state_holiday,
+            school_holiday,
+            assortment,
+            store_type,
+            competition_distance,
+            days_to_holiday,
+            days_since_holiday
+            )
+
+            # --------------------------------------------------------------
+            # 1. Load ONLY the sales model
+            # 2. Predict sales
+            # 3. Release the model from memory
+            # --------------------------------------------------------------
+            pred_sales = predict_with_model(
+                SALES_MODEL_DRIVE_ID,
+                "final_tuned_rf_pipeline.pkl",
+                X_row
+            )[0]
+
+            # --------------------------------------------------------------
+            # 4. Load ONLY the customers model
+            # 5. Predict customers
+            # 6. Release the model from memory
+            # --------------------------------------------------------------
+            pred_customers = predict_with_model(
+                CUSTOMERS_MODEL_DRIVE_ID,
+                "final_tuned_rf_customers_pipeline.pkl",
+                X_row
+            )[0]
+
+            # --------------------------------------------------------------
+            # Display both predictions
+            # --------------------------------------------------------------
 
             k1, k2 = st.columns(2)
-            with k1: kpi_card("Predicted Sales", f"€{pred_sales:,.0f}", "#2E8B57")
-            with k2: kpi_card("Predicted Customers", f"{pred_customers:,.0f}", "#1F77B4")
+
+            with k1:
+                kpi_card(
+                    "Predicted Sales",
+                    f"€{pred_sales:,.0f}",
+                     "#2E8B57"
+                )
+
+            with k2:
+                kpi_card(
+                    "Predicted Customers",
+                    f"{pred_customers:,.0f}",
+                     "#1F77B4"
+                )
 
             fig, ax1 = plt.subplots(figsize=(6, 5))
             ax2 = ax1.twinx()
 
-            ax1.bar(0, pred_sales, width=0.35, color="forestgreen", alpha=0.85)
-            ax2.bar(1, pred_customers, width=0.35, color="cornflowerblue", alpha=0.85)
+            ax1.bar(
+                0,
+                pred_sales,
+                width=0.35,
+                color="forestgreen",
+                alpha=0.85
+            )
+
+            ax2.bar(
+                1,
+                pred_customers,
+                width=0.35,
+                color="cornflowerblue",
+                alpha=0.85
+            )
 
             ax1.set_xticks([0, 1])
-            ax1.set_xticklabels(["Sales (€)", "Customers"], fontsize=11)
-            ax1.set_ylabel("Predicted Sales (€)", color="forestgreen", fontsize=11)
-            ax2.set_ylabel("Predicted Customers", color="cornflowerblue", fontsize=11)
-            
-            safe_sales_max = max(st.session_state.sales_axis_max, pred_sales * 1.25)
-            safe_cust_max = max(st.session_state.cust_axis_max, pred_customers * 1.25)
-            
+            ax1.set_xticklabels(
+                ["Sales (€)", "Customers"],
+                fontsize=11
+            )
+
+            ax1.set_ylabel(
+                "Predicted Sales (€)",
+                color="forestgreen",
+                fontsize=11
+            )
+
+            ax2.set_ylabel(
+                "Predicted Customers",
+                color="cornflowerblue",
+                fontsize=11
+            )
+
+            safe_sales_max = max(
+                st.session_state.sales_axis_max,
+                pred_sales * 1.25
+            )
+
+            safe_cust_max = max(
+                st.session_state.cust_axis_max,
+                pred_customers * 1.25
+            )
+
             ax1.set_ylim(0, safe_sales_max)
             ax2.set_ylim(0, safe_cust_max)
-            ax1.tick_params(axis="y", labelcolor="forestgreen", labelsize=9)
-            ax2.tick_params(axis="y", labelcolor="cornflowerblue", labelsize=9)
-            ax1.tick_params(axis="x", labelsize=10)
-            ax1.grid(axis="y", linestyle="--", alpha=0.25)
+
+            ax1.tick_params(
+                axis="y",
+                labelcolor="forestgreen",
+                labelsize=9
+            )
+
+            ax2.tick_params(
+                axis="y",
+                labelcolor="cornflowerblue",
+                labelsize=9
+            )
+
+            ax1.tick_params(
+                axis="x",
+                labelsize=10
+            )
+
+            ax1.grid(
+                axis="y",
+                linestyle="--",
+                alpha=0.25
+            )
+
             ax1.grid(False, axis="x")
             ax2.grid(False)
-            ax1.set_title(f"Store {store_id} — {forecast_date}", color=TITLE_COLOR, fontweight="bold", fontsize=13)
+
+            ax1.set_title(
+                f"Store {store_id} — {forecast_date}",
+                color=TITLE_COLOR,
+                fontweight="bold",
+                fontsize=13
+            )
+
             plt.tight_layout()
             st.pyplot(fig)
         else:
@@ -361,10 +505,22 @@ with tab2:
                                            r["Assortment"], r["StoreType"], r["CompetitionDistance"],
                                            max(days_to, 0), max(days_since, 0)))
         X_bulk = pd.concat(rows, ignore_index=True)
-
+        
         results = upload_df[["Store", "Date"]].copy()
-        results["Predicted_Sales"] = sales_pipeline.predict(X_bulk)
-        results["Predicted_Customers"] = customers_pipeline.predict(X_bulk)
+
+        # Predict sales first, then release the sales model.
+        results["Predicted_Sales"] = predict_with_model(
+            SALES_MODEL_DRIVE_ID,
+            "final_tuned_rf_pipeline.pkl",
+            X_bulk
+        )
+
+        # Predict customers second, after the sales model has been released.
+        results["Predicted_Customers"] = predict_with_model(
+            CUSTOMERS_MODEL_DRIVE_ID,
+            "final_tuned_rf_customers_pipeline.pkl",
+            X_bulk
+        )
         
         if view_mode == "Aggregate":
             plot_data = results.groupby("Date")[["Predicted_Sales", "Predicted_Customers"]].sum()
