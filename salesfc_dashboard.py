@@ -239,53 +239,6 @@ with tab1:
         store_row = store_ref[store_ref["Store"] == store_id].iloc[0]
 
         forecast_date = st.date_input("Forecast date", value=date.today())
-        # --------------------------------------------------------------
-        # Dynamic chart scale for the selected store
-        # Uses a neutral baseline prediction for this store.
-        # Only ONE ML model is loaded at a time.
-        # --------------------------------------------------------------
-        if (
-            "current_store" not in st.session_state
-            or st.session_state.current_store != store_id
-        ):
-            default_dist = (
-                int(store_row["CompetitionDistance"])
-                if pd.notna(store_row["CompetitionDistance"])
-                else 5000
-            )
-
-            baseline_X = build_feature_row(
-                store_row,
-                forecast_date,
-                promo=0,
-                state_holiday="0",
-                school_holiday=0,
-                assortment=store_row["Assortment"],
-                store_type=store_row["StoreType"],
-                competition_distance=default_dist,
-                days_to_holiday=14,
-                days_since_holiday=14
-            )
-
-            # Load sales model -> predict -> release
-            base_sales = predict_with_model(
-                SALES_MODEL_DRIVE_ID,
-                "final_tuned_rf_pipeline.pkl",
-                baseline_X
-            )[0]
-
-            # Load customers model -> predict -> release
-            base_cust = predict_with_model(
-                CUSTOMERS_MODEL_DRIVE_ID,
-                "final_tuned_rf_customers_pipeline.pkl",
-                baseline_X
-            )[0]
-
-            # Give the chart room above the neutral baseline.
-            # These are dynamic per store, NOT fixed values.
-            st.session_state.sales_axis_max = base_sales * 2.0
-            st.session_state.cust_axis_max = base_cust * 2.0
-            st.session_state.current_store = store_id
             
         st.markdown("**Top drivers** — pre-filled from this store, adjustable for what-if scenarios")
         promo = st.selectbox("Promo running today?", ["No", "Yes"])
@@ -349,39 +302,94 @@ with tab1:
         if predict_clicked:
 
             X_row = build_feature_row(
-            store_row,
-            forecast_date,
-            promo,
-            state_holiday,
-            school_holiday,
-            assortment,
-            store_type,
-            competition_distance,
-            days_to_holiday,
-            days_since_holiday
+                store_row,
+                forecast_date,
+                promo,
+                state_holiday,
+                school_holiday,
+                assortment,
+                store_type,
+                competition_distance,
+                days_to_holiday,
+                days_since_holiday
             )
 
             # --------------------------------------------------------------
-            # 1. Load ONLY the sales model
-            # 2. Predict sales
-            # 3. Release the model from memory
+            # Build neutral baseline row for dynamic chart scaling
             # --------------------------------------------------------------
-            pred_sales = predict_with_model(
-                SALES_MODEL_DRIVE_ID,
-                "final_tuned_rf_pipeline.pkl",
-                X_row
-            )[0]
+            default_dist = (
+                int(store_row["CompetitionDistance"])
+                if pd.notna(store_row["CompetitionDistance"])
+                else 5000
+            )
+
+            baseline_X = build_feature_row(
+                store_row,
+                forecast_date,
+                promo=0,
+                state_holiday="0",
+                school_holiday=0,
+                assortment=store_row["Assortment"],
+                store_type=store_row["StoreType"],
+                competition_distance=default_dist,
+                days_to_holiday=14,
+                days_since_holiday=14
+            )
 
             # --------------------------------------------------------------
-            # 4. Load ONLY the customers model
-            # 5. Predict customers
-            # 6. Release the model from memory
+            # SALES MODEL
+            # Load once -> predict baseline + actual -> release
             # --------------------------------------------------------------
-            pred_customers = predict_with_model(
+            sales_inputs = pd.concat(
+                [baseline_X, X_row],
+                ignore_index=True
+            )
+
+            sales_predictions = predict_with_model(
+                SALES_MODEL_DRIVE_ID,
+                "final_tuned_rf_pipeline.pkl",
+                sales_inputs
+            )
+
+            base_sales = sales_predictions[0]
+            pred_sales = sales_predictions[1]
+
+            del sales_predictions
+            gc.collect()
+
+            # --------------------------------------------------------------
+            # CUSTOMERS MODEL
+            # Load once -> predict baseline + actual -> release
+            # --------------------------------------------------------------
+            customer_inputs = pd.concat(
+                [baseline_X, X_row],
+                ignore_index=True
+            )
+
+            customer_predictions = predict_with_model(
                 CUSTOMERS_MODEL_DRIVE_ID,
                 "final_tuned_rf_customers_pipeline.pkl",
-                X_row
-            )[0]
+                customer_inputs
+            )
+
+            base_cust = customer_predictions[0]
+            pred_customers = customer_predictions[1]
+
+            del customer_predictions
+            gc.collect()
+
+            # --------------------------------------------------------------
+            # Dynamic chart limits
+            # --------------------------------------------------------------
+            safe_sales_max = max(
+                base_sales * 2.0,
+                pred_sales * 1.25
+            )
+
+            safe_cust_max = max(
+                base_cust * 2.0,
+                pred_customers * 1.25
+            )        
 
             # --------------------------------------------------------------
             # Display both predictions
@@ -440,15 +448,6 @@ with tab1:
                 fontsize=11
             )
 
-            safe_sales_max = max(
-                st.session_state.sales_axis_max,
-                pred_sales * 1.25
-            )
-
-            safe_cust_max = max(
-                st.session_state.cust_axis_max,
-                pred_customers * 1.25
-            )
 
             ax1.set_ylim(0, safe_sales_max)
             ax2.set_ylim(0, safe_cust_max)

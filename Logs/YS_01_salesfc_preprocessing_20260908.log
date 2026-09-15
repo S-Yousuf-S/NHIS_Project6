@@ -1,0 +1,136 @@
+2026-09-08 17:09:23 - 01_salesfc_preprocessing - INFO - Logging session started for '01_salesfc_preprocessing' -> Logs\YS_01_salesfc_preprocessing_20260908.log
+2026-09-08 17:09:23 - 01_salesfc_preprocessing - INFO - Loaded 'train.csv' from local Assets/ folder.
+2026-09-08 17:09:24 - 01_salesfc_preprocessing - INFO - Loaded 'test.csv' from local Assets/ folder.
+2026-09-08 17:09:24 - 01_salesfc_preprocessing - INFO - Loaded 'store.csv' from local Assets/ folder.
+2026-09-08 17:09:24 - 01_salesfc_preprocessing - INFO - Pre-merge check — train orphan stores: 0, test orphan stores: 0
+2026-09-08 17:09:25 - 01_salesfc_preprocessing - INFO - Merged store_train_data: (1017209, 18)
+2026-09-08 17:09:25 - 01_salesfc_preprocessing - INFO - Merged store_test_data: (41088, 17)
+2026-09-08 17:09:25 - 01_salesfc_preprocessing - DEBUG - [store_train_data] Date converted to datetime64[ns]
+2026-09-08 17:09:25 - 01_salesfc_preprocessing - DEBUG - [store_train_data] StateHoliday standardized to string
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'Store' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'DayOfWeek' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'Open' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'Promo' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'StateHoliday' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'SchoolHoliday' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'Promo2' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'StoreType' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_train_data] 'Assortment' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] Date converted to datetime64[ns]
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] StateHoliday standardized to string
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'Store' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'DayOfWeek' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'Open' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'Promo' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'StateHoliday' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'SchoolHoliday' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'Promo2' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'StoreType' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - DEBUG - [store_test_data] 'Assortment' converted to category
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - INFO - store_train_data dtypes after correction:
+Store                              category
+DayOfWeek                          category
+Date                         datetime64[ns]
+Sales                                 int64
+Customers                             int64
+Open                               category
+Promo                              category
+StateHoliday                       category
+SchoolHoliday                      category
+StoreType                          category
+Assortment                         category
+CompetitionDistance                 float64
+CompetitionOpenSinceMonth           float64
+CompetitionOpenSinceYear            float64
+Promo2                             category
+Promo2SinceWeek                     float64
+Promo2SinceYear                     float64
+PromoInterval                        object
+dtype: object
+2026-09-08 17:09:26 - 01_salesfc_preprocessing - INFO - store_test_data dtypes after correction:
+Id                                    int64
+Store                              category
+DayOfWeek                          category
+Date                         datetime64[ns]
+Open                               category
+Promo                              category
+StateHoliday                       category
+SchoolHoliday                      category
+StoreType                          category
+Assortment                         category
+CompetitionDistance                 float64
+CompetitionOpenSinceMonth           float64
+CompetitionOpenSinceYear            float64
+Promo2                             category
+Promo2SinceWeek                     float64
+Promo2SinceYear                     float64
+PromoInterval                        object
+dtype: object
+2026-09-08 17:09:27 - 01_salesfc_preprocessing - INFO - Duplicate check — train: full=0, store-date=0 | test: full=0, store-date=0
+2026-09-08 17:09:28 - 01_salesfc_preprocessing - INFO - [store_train_data] Missing value audit: 6 column(s) with missing values.
+2026-09-08 17:09:28 - 01_salesfc_preprocessing - INFO - [store_test_data] Missing value audit: 7 column(s) with missing values.
+2026-09-08 17:09:28 - 01_salesfc_preprocessing - DEBUG - Store 622 historical Open rate: 0.8323
+2026-09-08 17:09:29 - 01_salesfc_preprocessing - DEBUG - CompetitionOpenSinceYear frequency distribution computed — 23 distinct years
+2026-09-08 17:09:29 - 01_salesfc_preprocessing - DEBUG - Promo2SinceYear frequency distribution computed — 7 distinct years
+2026-09-08 17:09:32 - 01_salesfc_preprocessing - DEBUG - Promo2_Duration_Weeks derived — no fill statistic needed (Promo2==1 rows always complete).
+2026-09-08 17:09:37 - 01_salesfc_preprocessing - DEBUG - CompetitionOpen_Duration_Months derived — median (51.2 months) computed from train only.
+2026-09-08 17:09:38 - 01_salesfc_preprocessing - INFO - Remaining missing values resolved; raw source columns dropped after duration conversion.
+2026-09-08 17:09:38 - 01_salesfc_preprocessing - INFO - Missing value treatment complete. Remaining missing: 0 columns.
+2026-09-08 17:09:38 - 01_salesfc_preprocessing - INFO - Checkpoint: store_train_refined (1017209, 17), store_test_refined (41088, 16)
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] Year extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] Month extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] Day extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] WeekOfYear extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] Quarter extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] IsWeekend flag derived from DayOfWeek (6=Saturday, 7=Sunday)
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] MonthPosition binned from Day
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] Year extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] Month extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] Day extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] WeekOfYear extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] Quarter extracted from Date
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] IsWeekend flag derived from DayOfWeek (6=Saturday, 7=Sunday)
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] MonthPosition binned from Day
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - INFO - Date-derived features added. store_train_refined shape: (1017209, 24)
+2026-09-08 17:09:39 - 01_salesfc_preprocessing - INFO - Date-derived features added. store_test_refined shape: (41088, 23)
+2026-09-08 17:13:30 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] DaysToNextHoliday computed
+2026-09-08 17:14:38 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] DaysSinceLastHoliday computed
+2026-09-08 17:14:40 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] DaysToNextHoliday computed
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] DaysSinceLastHoliday computed
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - INFO - Holiday proximity features added using combined calendar. store_train_refined shape: (1017209, 26)
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - INFO - Holiday proximity features added using combined calendar. store_test_refined shape: (41088, 25)
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - INFO - DaysToNextHoliday boundary NaNs resolved — train fill: 105, test fill: 14.
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - INFO - DaysSinceLastHoliday boundary NaNs resolved — train fill: 105, test fill: 71.
+2026-09-08 17:14:43 - 01_salesfc_preprocessing - INFO - Holiday proximity boundary cases resolved. store_train_refined shape: (1017209, 26), store_test_refined shape: (41088, 25)
+2026-09-08 17:14:52 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] IsPromo2Month flag derived from PromoInterval
+2026-09-08 17:14:52 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] IsPromo2Month flag derived from PromoInterval
+2026-09-08 17:14:53 - 01_salesfc_preprocessing - INFO - IsPromo2Month added and PromoInterval dropped. store_train_refined shape: (1017209, 26)
+2026-09-08 17:14:53 - 01_salesfc_preprocessing - INFO - IsPromo2Month added and PromoInterval dropped. store_test_refined shape: (41088, 25)
+2026-09-08 17:14:53 - 01_salesfc_preprocessing - INFO - Feature Engineering validated. store_train_refined shape: (1017209, 26), store_test_refined shape: (41088, 25)
+2026-09-08 17:14:54 - 01_salesfc_preprocessing - DEBUG - [store_train_refined] Temporary EDA label columns added (Assortment, StateHoliday, Open, Promo, Promo2, SchoolHoliday)
+2026-09-08 17:14:54 - 01_salesfc_preprocessing - DEBUG - [store_test_refined] Temporary EDA label columns added (Assortment, StateHoliday, Open, Promo, Promo2, SchoolHoliday)
+2026-09-08 17:14:54 - 01_salesfc_preprocessing - INFO - Temporary EDA label columns added. store_train_refined shape: (1017209, 32), store_test_refined shape: (41088, 31)
+2026-09-08 17:15:07 - 01_salesfc_preprocessing - INFO - Univariate categorical analysis plotted for StoreType, Assortment, StateHoliday, Promo, Promo2, SchoolHoliday.
+2026-09-08 17:15:25 - 01_salesfc_preprocessing - INFO - Univariate numerical distributions plotted for 15 columns (KDE computed on a 50,000-row sample per column for performance; skew/kurtosis computed on full data).
+2026-09-08 17:16:05 - 01_salesfc_preprocessing - INFO - Univariate numerical boxplots + IQR outlier counts computed for 15 columns.
+2026-09-08 17:16:05 - 01_salesfc_preprocessing - INFO - Outlier treatment decision table generated — only CompetitionOpen_Duration_Months flagged for capping.
+2026-09-08 17:16:05 - 01_salesfc_preprocessing - INFO - CompetitionOpen_Duration_Months capped at 199.00. Skew 9.575->1.008, Kurtosis 189.529->1.094
+2026-09-08 17:16:49 - 01_salesfc_preprocessing - INFO - Post-treatment visual generated for CompetitionOpen_Duration_Months — outliers now 60,318 (5.93%).
+2026-09-08 17:16:50 - 01_salesfc_preprocessing - INFO - Promo distribution compared — train vs. test.
+2026-09-08 17:16:51 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales behavior Before/During/After holidays (closure rate added to correct Open==1 selection bias).
+2026-09-08 17:16:53 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Seasonal and Weekly Sales patterns.
+2026-09-08 17:16:57 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales-Customers correlation (r=0.824).
+2026-09-08 17:16:59 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Promo effect on Sales/Customers (Sales lift=38.77%, Customer lift=21.18%, Spend lift=14.52%).
+2026-09-08 17:17:00 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Monday sales/customers by prior-Sunday closure status (mean effect=-17.9%, StoreType-b share Open=61.7% vs Closed=0.0%).
+2026-09-08 17:17:02 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Saturday sales/customers/spend by always-weekday-open status (sales gap=+2.61%, customer gap=-10.64%, spend gap=+14.83%).
+2026-09-08 17:17:03 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales/Customers/Spend-per-customer by Assortment_Label (Extra assortment n=9 stores, small-sample caution).
+2026-09-08 17:17:05 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales by explicit geographic distance bracket (correlation r=-0.036).
+2026-09-08 17:17:06 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales by competitor age bucket (time since competitor opened).
+2026-09-08 17:17:08 - 01_salesfc_preprocessing - INFO - Beyond-Ask analysis plotted: Day-of-week-controlled holiday anticipation effect (peak excess at day 2).
+2026-09-08 17:17:10 - 01_salesfc_preprocessing - INFO - Bivariate analysis plotted: Sales/Customers/Spend-per-customer by StoreType.
+2026-09-08 17:17:11 - 01_salesfc_preprocessing - INFO - Multivariate analysis plotted: correlation heatmap across key numeric features.
+2026-09-08 17:17:12 - 01_salesfc_preprocessing - INFO - Multivariate analysis plotted: Combo chart of absolute sales and Promo lift % by StoreType.
+2026-09-08 17:17:12 - 01_salesfc_preprocessing - INFO - Dropped EDA-only columns from store_train_refined (34->26) and store_test_refined (31->25).
+2026-09-08 17:17:12 - 01_salesfc_preprocessing - INFO - Final Technical Verification complete. Train shape: (1017209, 26).
+2026-09-08 17:17:12 - 01_salesfc_preprocessing - INFO - Final Technical Verification complete. Test shape: (41088, 25)
+2026-09-08 17:17:21 - 01_salesfc_preprocessing - INFO - Export complete. Train: Assets/store_train_data.csv, Test: Assets/store_test_data.csv

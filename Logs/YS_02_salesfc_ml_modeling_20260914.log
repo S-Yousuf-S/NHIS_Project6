@@ -1,0 +1,119 @@
+2026-09-14 01:08:03 - 02_salesfc_ml_modeling - INFO - Logging session started for '02_salesfc_ml_modeling' -> Logs\YS_02_salesfc_ml_modeling_20260914.log
+2026-09-14 01:08:03 - 02_salesfc_ml_modeling - INFO - Loaded 'store_train_data.csv' from local Assets/ folder.
+2026-09-14 01:08:05 - 02_salesfc_ml_modeling - INFO - Loaded 'store_test_data.csv' from local Assets/ folder.
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Loaded store_train_data.csv (shape=(1017209, 26)) and store_test_data.csv (shape=(41088, 25)).
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Store' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'DayOfWeek' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Date' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Sales' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Customers' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Open' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Promo' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'StateHoliday' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'SchoolHoliday' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'StoreType' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Assortment' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'CompetitionDistance' dtype: float64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Promo2' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Promo2_Duration_Weeks' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'CompetitionOpen_Duration_Months' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'CompetitionOpenDate_Known' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Year' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Month' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Day' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'WeekOfYear' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'Quarter' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'IsWeekend' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'MonthPosition' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'DaysToNextHoliday' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'DaysSinceLastHoliday' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_train_model] Column 'IsPromo2Month' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - [store_train_model] Missing value audit: 0 column(s) with missing values.
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Post-reload verification complete. Train dtypes preserved as category: []
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Id' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Store' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'DayOfWeek' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Date' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Open' dtype: float64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Promo' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'StateHoliday' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'SchoolHoliday' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'StoreType' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Assortment' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'CompetitionDistance' dtype: float64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Promo2' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Promo2_Duration_Weeks' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'CompetitionOpen_Duration_Months' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'CompetitionOpenDate_Known' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Year' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Month' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Day' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'WeekOfYear' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'Quarter' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'IsWeekend' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'MonthPosition' dtype: object
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'DaysToNextHoliday' dtype: float64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'DaysSinceLastHoliday' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - [store_test_model] Column 'IsPromo2Month' dtype: int64
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - [store_test_model] Missing value audit: 0 column(s) with missing values.
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Post-reload verification complete. Test dtypes preserved as category: []
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - store_train_model Date dtype: datetime64[ns]
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - store_test_model Date dtype: datetime64[ns]
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Date column restored to datetime64 for both datasets.
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - Categorical features: ['StoreType', 'Assortment', 'StateHoliday', 'MonthPosition', 'DayOfWeek']
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - Numerical features: ['Promo', 'SchoolHoliday', 'CompetitionDistance', 'Promo2', 'Promo2_Duration_Weeks', 'CompetitionOpen_Duration_Months', 'CompetitionOpenDate_Known', 'Year', 'Month', 'Day', 'WeekOfYear', 'Quarter', 'IsWeekend', 'DaysToNextHoliday', 'DaysSinceLastHoliday', 'IsPromo2Month']
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Feature types identified: 5 categorical, 16 numerical, 1 passthrough (Store).
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - Numerical features (scaled): ['Promo', 'SchoolHoliday', 'CompetitionDistance', 'Promo2', 'Promo2_Duration_Weeks', 'CompetitionOpen_Duration_Months', 'CompetitionOpenDate_Known', 'Year', 'Month', 'Day', 'WeekOfYear', 'Quarter', 'IsWeekend', 'DaysToNextHoliday', 'DaysSinceLastHoliday', 'IsPromo2Month']
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - Categorical features (one-hot): ['StoreType', 'Assortment', 'StateHoliday', 'MonthPosition', 'DayOfWeek']
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - ColumnTransformer defined (StandardScaler + OneHotEncoder + Store passthrough), not yet fit.
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - DEBUG - Full train date range: 2013-01-01 to 2015-07-31
+2026-09-14 01:08:06 - 02_salesfc_ml_modeling - INFO - Time-based cutoff set at 2015-06-19 for a 6-week validation window.
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Store
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: DayOfWeek
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Promo
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: StateHoliday
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: SchoolHoliday
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: StoreType
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Assortment
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: CompetitionDistance
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Promo2
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Promo2_Duration_Weeks
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: CompetitionOpen_Duration_Months
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: CompetitionOpenDate_Known
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Year
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Month
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Day
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: WeekOfYear
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: Quarter
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: IsWeekend
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: MonthPosition
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: DaysToNextHoliday
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: DaysSinceLastHoliday
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - DEBUG - Feature included in split: IsPromo2Month
+2026-09-14 01:08:07 - 02_salesfc_ml_modeling - INFO - Time-based split complete. X_train shape: (804110, 22), X_val shape: (40282, 22).
+2026-09-14 01:08:09 - 02_salesfc_ml_modeling - INFO - Preprocessor fit/transform complete. X_train_processed: (804110, 38), X_val_processed: (40282, 38).
+2026-09-14 01:16:04 - 02_salesfc_ml_modeling - INFO - Baseline RandomForestRegressor pipeline trained (n_estimators=100, random_state=42).
+2026-09-14 01:16:11 - 02_salesfc_ml_modeling - INFO - Baseline RF validation — MAE: 685.95, RMSE: 1091.90, R2: 0.8722, RMSPE: 0.1400.
+2026-09-14 01:16:19 - 02_salesfc_ml_modeling - INFO - XGBoost pipeline trained (n_estimators=200, max_depth=8, learning_rate=0.1, random_state=42).
+2026-09-14 01:16:23 - 02_salesfc_ml_modeling - INFO - LightGBM pipeline trained (n_estimators=200, max_depth=8, learning_rate=0.1, random_state=42).
+2026-09-14 01:16:23 - 02_salesfc_ml_modeling - INFO - XGBoost validation — MAE: €847.02, RMSE: €1205.80, R2: 0.8442, RMSPE: 18.72%.
+2026-09-14 01:16:23 - 02_salesfc_ml_modeling - INFO - LightGBM validation — MAE: €1151.95, RMSE: €1591.88, R2: 0.7284, RMSPE: 27.13%.
+2026-09-14 01:16:23 - 02_salesfc_ml_modeling - INFO - Model comparison — RF RMSPE=14.00%, XGB RMSPE=18.72%, LGBM RMSPE=27.13%.
+2026-09-14 01:16:24 - 02_salesfc_ml_modeling - INFO - Starting RandomizedSearchCV for Random Forest...
+2026-09-14 01:23:51 - 02_salesfc_ml_modeling - INFO - Tuning complete. Tuned RF RMSPE: 8.05%. Best params: {'model__min_samples_split': 10, 'model__min_samples_leaf': 2, 'model__max_features': None, 'model__max_depth': 30}
+2026-09-14 01:23:52 - 02_salesfc_ml_modeling - INFO - Interim checkpoint saved: Assets/interim_checkpoint_tuned_rf_14-09-2026-01-23-51.pkl
+2026-09-14 01:23:53 - 02_salesfc_ml_modeling - INFO - Final Model Comparison plotted. Best model selected: RF (Tuned) with RMSPE 8.05%.
+2026-09-14 01:23:57 - 02_salesfc_ml_modeling - INFO - Overfitting check — Train RMSPE: 14.58%, Val RMSPE: 8.05%, gap: 6.53pp.
+2026-09-14 01:23:58 - 02_salesfc_ml_modeling - DEBUG - Top 5 built-in importance features: ['CompetitionDistance', 'Store', 'Promo', 'CompetitionOpen_Duration_Months', 'StoreType']
+2026-09-14 01:23:58 - 02_salesfc_ml_modeling - INFO - Built-in (Gini/MDI) feature importance computed and plotted.
+2026-09-14 01:32:01 - 02_salesfc_ml_modeling - DEBUG - Top 5 permutation importance features: ['CompetitionDistance', 'Store', 'Assortment', 'Promo', 'Promo2']
+2026-09-14 01:32:01 - 02_salesfc_ml_modeling - INFO - Permutation importance computed and plotted (n_repeats=5, scoring=r2).
+2026-09-14 01:32:01 - 02_salesfc_ml_modeling - INFO - Feature importance method-agreement table computed with average-rank synthesis across both methods.
+2026-09-14 01:32:02 - 02_salesfc_ml_modeling - INFO - Extracting individual tree predictions to compute intervals...
+2026-09-14 01:32:03 - 02_salesfc_ml_modeling - INFO - Confidence intervals plotted. Actual coverage: 86.0%
+2026-09-14 01:37:01 - 02_salesfc_ml_modeling - INFO - Final model serialized to Assets/final_tuned_rf_pipeline_14-09-2026-01-32-03.pkl.
+2026-09-14 01:37:01 - 02_salesfc_ml_modeling - INFO - Generating predictions for 35104 open stores...
+2026-09-14 01:37:01 - 02_salesfc_ml_modeling - INFO - Test set predictions complete. ML predictions: 35104, Zeros: 5984. Submission saved to Assets/submission.csv
+2026-09-14 01:40:15 - 02_salesfc_ml_modeling - INFO - Customers RandomForestRegressor pipeline fit on training data.
+2026-09-14 01:40:15 - 02_salesfc_ml_modeling - INFO - Customers model validation: R2=0.9467, MAE=55.74, RMSE=89.26, RMSPE=11.95%.
+2026-09-14 01:44:17 - 02_salesfc_ml_modeling - INFO - Customers model serialized to Assets/final_tuned_rf_customers_pipeline_14-09-2026-01-40-15.pkl.

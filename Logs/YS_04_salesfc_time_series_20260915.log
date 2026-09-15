@@ -1,0 +1,32 @@
+2026-09-15 19:25:42 - 04_salesfc_time_series - INFO - Logging session started for '04_salesfc_time_series' -> Logs/YS_04_salesfc_time_series_20260915.log
+2026-09-15 19:25:42 - 04_salesfc_time_series - INFO - Environment setup complete — prerequisites, statsmodels, and Keras tools imported.
+2026-09-15 19:25:54 - 04_salesfc_time_series - INFO - Loaded 'store_train_data.csv' from GitHub raw and cached locally.
+2026-09-15 19:25:54 - 04_salesfc_time_series - INFO - Loaded 'store_test_data.csv' from GitHub raw and cached locally.
+2026-09-15 19:25:54 - 04_salesfc_time_series - INFO - Loaded store_train_data.csv (shape=(1017209, 26)) and store_test_data.csv (shape=(41088, 25)).
+2026-09-15 19:26:23 - 04_salesfc_time_series - INFO - Loaded latest local model artifact: Assets/final_lstm_model_08-09-2026-14-46-29.keras
+2026-09-15 19:26:24 - 04_salesfc_time_series - INFO - Final LSTM model loaded successfully (architecture reference).
+2026-09-15 19:26:25 - 04_salesfc_time_series - INFO - Aggregate daily sales series built. 942 daily observations, 2013-01-01 to 2015-07-31.
+2026-09-15 19:26:25 - 04_salesfc_time_series - INFO - ADF test complete. Statistic: -4.7616, p-value: 0.000064.
+2026-09-15 19:26:27 - 04_salesfc_time_series - INFO - ACF and PACF plots generated (30 lags) on the aggregate daily Sales series.
+2026-09-15 19:26:27 - 04_salesfc_time_series - INFO - Significant ACF lags: [2, 5, 6, 7, 8, 9, 12, 14, 16, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30]. Significant PACF lags: [2, 5, 6, 7, 8, 9, 10, 11, 13, 14, 17, 21, 28].
+2026-09-15 19:27:00 - 04_salesfc_time_series - INFO - Order selection grid search complete. 32 models fit successfully. 
+2026-09-15 19:27:00 - 04_salesfc_time_series - INFO - Best AIC: (3,0,3)=30586.98. Best BIC: (3,0,3)=30625.76.
+2026-09-15 19:27:00 - 04_salesfc_time_series - INFO - ARIMA train/validation split: train=900 days, validation=42 days.
+2026-09-15 19:27:05 - 04_salesfc_time_series - INFO - ARIMA(3,0,3) converged successfully.
+2026-09-15 19:27:05 - 04_salesfc_time_series - INFO - ARIMA forecast generated.
+2026-09-15 19:27:06 - 04_salesfc_time_series - INFO - ARIMA forecast vs. actual plot generated.
+2026-09-15 19:27:06 - 04_salesfc_time_series - INFO - ARIMA(3,0,3) validation: R2=0.2957, MAE=2056914.87, RMSE=2548081.01, RMSPE=557.87%.
+2026-09-15 19:27:30 - 04_salesfc_time_series - INFO - SARIMA(3,0,3)(1,0,1,7) converged successfully.
+2026-09-15 19:27:30 - 04_salesfc_time_series - INFO - SARIMA forecast generated.
+2026-09-15 19:27:31 - 04_salesfc_time_series - INFO - SARIMA(3,0,3)(1,0,1,7) validation: R2=0.8558, MAE=933252.19, RMSE=1153044.57, RMSPE=47.90%.
+2026-09-15 19:27:31 - 04_salesfc_time_series - INFO - ARIMA vs SARIMA comparison: ARIMA R2=0.2957/RMSPE=557.87%, SARIMA R2=0.8558/RMSPE=47.90%.
+2026-09-15 19:27:31 - 04_salesfc_time_series - INFO - Loaded latest local model artifact: Assets/final_aggregate_lstm_11-09-2026-08-58-56.keras
+2026-09-15 19:27:31 - 04_salesfc_time_series - INFO - Aggregate LSTM loaded from existing artifact, training skipped.
+2026-09-15 19:27:32 - 04_salesfc_time_series - INFO - Aggregate LSTM validation predictions generated.
+2026-09-15 19:27:32 - 04_salesfc_time_series - INFO - Skipped saving — using existing aggregate LSTM artifact.
+2026-09-15 19:27:33 - 04_salesfc_time_series - INFO - Forecast comparison plot generated.
+2026-09-15 19:27:33 - 04_salesfc_time_series - INFO - Forecast evaluation complete. ARIMA R2=0.2957/RMSPE=557.87%, SARIMA R2=0.8558/RMSPE=47.90%, Aggregate LSTM R2=0.9266/RMSPE=137.76%.
+2026-09-15 19:27:33 - 04_salesfc_time_series - INFO - ARIMA serialized to Assets/final_arima_model_15-09-2026-19-27-33.pkl. SARIMA serialized to Assets/final_sarima_model_15-09-2026-19-27-33.pkl.
+2026-09-15 19:27:33 - 04_salesfc_time_series - INFO - Final cross-notebook model comparison table rendered.
+2026-09-15 19:27:35 - 04_salesfc_time_series - INFO - Final all-model R2 vs RMSPE dual-axis comparison chart rendered.
+2026-09-15 19:27:35 - 04_salesfc_time_series - INFO - Final Verdict rendered. Tuned RF (RMSPE 8.05%) remains the overall project winner.
