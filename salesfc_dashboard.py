@@ -239,16 +239,54 @@ with tab1:
         store_row = store_ref[store_ref["Store"] == store_id].iloc[0]
 
         forecast_date = st.date_input("Forecast date", value=date.today())
+        # --------------------------------------------------------------
+        # Dynamic chart scale for the selected store
+        # Uses a neutral baseline prediction for this store.
+        # Only ONE ML model is loaded at a time.
+        # --------------------------------------------------------------
+        if (
+            "current_store" not in st.session_state
+            or st.session_state.current_store != store_id
+        ):
+            default_dist = (
+                int(store_row["CompetitionDistance"])
+                if pd.notna(store_row["CompetitionDistance"])
+                else 5000
+            )
 
-        if "current_store" not in st.session_state or st.session_state.current_store != store_id:
+            baseline_X = build_feature_row(
+                store_row,
+                forecast_date,
+                promo=0,
+                state_holiday="0",
+                school_holiday=0,
+                assortment=store_row["Assortment"],
+                store_type=store_row["StoreType"],
+                competition_distance=default_dist,
+                days_to_holiday=14,
+                days_since_holiday=14
+            )
+
+            # Load sales model -> predict -> release
+            base_sales = predict_with_model(
+                SALES_MODEL_DRIVE_ID,
+                "final_tuned_rf_pipeline.pkl",
+                baseline_X
+            )[0]
+
+            # Load customers model -> predict -> release
+            base_cust = predict_with_model(
+                CUSTOMERS_MODEL_DRIVE_ID,
+                "final_tuned_rf_customers_pipeline.pkl",
+                baseline_X
+            )[0]
+
+            # Give the chart room above the neutral baseline.
+            # These are dynamic per store, NOT fixed values.
+            st.session_state.sales_axis_max = base_sales * 2.0
+            st.session_state.cust_axis_max = base_cust * 2.0
             st.session_state.current_store = store_id
-
-            # Initial chart limits.
-            # These are only visual defaults; actual prediction values
-            # are calculated when Generate Forecast is clicked.
-            st.session_state.sales_axis_max = 40000
-            st.session_state.cust_axis_max = 5000
-
+            
         st.markdown("**Top drivers** — pre-filled from this store, adjustable for what-if scenarios")
         promo = st.selectbox("Promo running today?", ["No", "Yes"])
         promo = 1 if promo == "Yes" else 0
@@ -269,11 +307,11 @@ with tab1:
             st.session_state.comp_dist_slider = default_val
             st.session_state.comp_dist_num = default_val
 
-        col_s, col_n = st.columns([3, 1])
+        col_s, col_n = st.columns([2.5, 1.5])
         with col_s:
             st.slider("Competition Distance (m)", 0, 20000, key="comp_dist_slider", on_change=sync_slider_to_num)
         with col_n:
-            st.number_input(" ", 0, 20000, key="comp_dist_num", on_change=sync_num_to_slider, label_visibility="collapsed")
+            st.number_input(" ", 0, 20000, step=1, key="comp_dist_num", on_change=sync_num_to_slider, label_visibility="collapsed")
         competition_distance = st.session_state.comp_dist_slider
 
         with st.expander("Other date-dependent fields"):
@@ -286,11 +324,11 @@ with tab1:
             if "dth_slider" not in st.session_state:
                 st.session_state.dth_slider = 14
                 st.session_state.dth_num = 14
-            col_s, col_n = st.columns([3, 1])
+            col_s, col_n = st.columns([2.5, 1.5])
             with col_s:
                 st.slider("Days to next holiday", 0, 60, key="dth_slider", on_change=sync_dth_slider)
             with col_n:
-                st.number_input(" ", 0, 60, key="dth_num", on_change=sync_dth_num, label_visibility="collapsed")
+                st.number_input(" ", 0, 60, step=1, key="dth_num", on_change=sync_dth_num, label_visibility="collapsed")
             days_to_holiday = st.session_state.dth_slider
 
             def sync_dsh_slider(): st.session_state.dsh_num = st.session_state.dsh_slider
@@ -298,11 +336,11 @@ with tab1:
             if "dsh_slider" not in st.session_state:
                 st.session_state.dsh_slider = 14
                 st.session_state.dsh_num = 14
-            col_s2, col_n2 = st.columns([3, 1])
+            col_s2, col_n2 = st.columns([2.5, 1.5])
             with col_s2:
                 st.slider("Days since last holiday", 0, 60, key="dsh_slider", on_change=sync_dsh_slider)
             with col_n2:
-                st.number_input(" ", 0, 60, key="dsh_num", on_change=sync_dsh_num, label_visibility="collapsed")
+                st.number_input(" ", 0, 60, step=1, key="dsh_num", on_change=sync_dsh_num, label_visibility="collapsed")
             days_since_holiday = st.session_state.dsh_slider
 
         predict_clicked = st.button("Generate Forecast", type="primary")
